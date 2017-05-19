@@ -1,0 +1,5 @@
+$def with (companies)
+<ul>
+$for company in companies:
+    <li id="t$company.id">$company.id . <a href="company/$company.title">$company.title</a>></li>
+</ul>

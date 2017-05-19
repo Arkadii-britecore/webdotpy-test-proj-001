@@ -5,9 +5,12 @@ import web
 from sqlalchemy.orm import scoped_session, sessionmaker
 from model import *
 
+render = web.template.render('templates/')
+
 urls = (
-    #"/", "add",
-    "/view", "view"
+    '/', 'index',
+    '/company/(.*)', 'company_details',
+    '/view', 'view'
 )
 
 def load_sqla(handler):
@@ -31,23 +34,44 @@ app = web.application(urls, locals())
 app.add_processor(load_sqla)
 
 
-class add:
+# class add:
+#     def GET(self):
+#         web.header('Content-type', 'text/html')
+#         fname = "".join(random.choice(string.letters) for i in range(4))
+#         lname = "".join(random.choice(string.letters) for i in range(7))
+#         u = User(name=fname
+#                 ,fullname=fname + ' ' + lname
+#                 ,password =542)
+#         web.ctx.orm.add(u)
+#         return "added:" + web.websafe(str(u)) \
+#                             + "<br/>" \
+#                             + '<a href="/view">view all</a>'
+
+class index:
     def GET(self):
-        web.header('Content-type', 'text/html')
-        fname = "".join(random.choice(string.letters) for i in range(4))
-        lname = "".join(random.choice(string.letters) for i in range(7))
-        u = User(name=fname
-                ,fullname=fname + ' ' + lname
-                ,password =542)
-        web.ctx.orm.add(u)
-        return "added:" + web.websafe(str(u)) \
-                            + "<br/>" \
-                            + '<a href="/view">view all</a>'
+        '''
+        Get list of companies
+        :return: list of companies
+        '''
+        companies = web.ctx.orm.query(Company).all()
+        print('DBG: found {} companies'.format(len(companies)))
+        return render.index(companies)
+
 
 class view:
     def GET(self):
         web.header('Content-type', 'text/plain')
         return "\n".join(map(str, web.ctx.orm.query(Employee).all()))
+
+class company_details:
+    def GET(self, company):
+        '''
+        Show company details
+        :return: 
+        '''
+        # details = web.ctx.orm.query(Company).all()
+        details = company
+        return render.company_details(details)
 
 
 if __name__ == "__main__":
