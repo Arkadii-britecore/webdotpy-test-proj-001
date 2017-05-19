@@ -1,3 +1,4 @@
+from configparser import ConfigParser
 import mysql.connector
 from mysql.connector import errorcode
 # mysql.connector.connect(host='localhost',database='mysql',user='root',password='')
@@ -23,10 +24,7 @@ TABLES['todo'] = (
     "  PRIMARY KEY (`id`)"
     ") ENGINE=InnoDB")
 
-cnx = mysql.connector.connect(user='wdp', database='todo', password='kajhzbn7vceW')
-print('cnx', cnx)
-cursor = cnx.cursor()
-print('cursor', cursor)
+
 
 
 
@@ -63,9 +61,37 @@ print('cursor', cursor)
 #     else:
 #         print("OK")
 
+# cnx = mysql.connector.connect(user='wdp', database='todo', password='kajhzbn7vceW')
+# print('cnx', cnx)
+# cursor = cnx.cursor()
+# print('cursor', cursor)
 
 # create_database(cursor)
 
-cursor.close()
-cnx.close()
+# cursor.close()
+# cnx.close()
 
+def read_db_config(filename='config.ini', section='mysql'):
+    """ Read database configuration file and return a dictionary object
+    :param filename: name of the configuration file
+    :param section: section of database configuration
+    :return: a dictionary of database parameters
+    """
+    # create parser and read ini configuration file
+    parser = ConfigParser()
+    parser.read(filename)
+
+    # get section, default to mysql
+    db = {}
+    if parser.has_section(section):
+        items = parser.items(section)
+        for item in items:
+            db[item[0]] = item[1]
+    else:
+        raise Exception('{0} not found in the {1} file'.format(section, filename))
+
+    # print('DBG: db:', type(db), db)
+    return db
+
+# just exploring
+# read_db_config()

@@ -1,8 +1,5 @@
-$def with (name)
-
-$if name:
-    I just wanted to say <em>hello</em> to $name.
-$else:
-    <em>Hello</em>, world!
-<br>
-http://webpy.org/docs/0.3/tutorial
+$def with (todos)
+<ul>
+$for todo in todos:
+    <li id="t$todo.id">$todo.title</li>
+</ul>
