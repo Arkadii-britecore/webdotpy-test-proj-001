@@ -73,6 +73,14 @@ class company_details:
         details = company
 
         # extend company details
+        # todo - accept non-ASCII codepage
+        print('DBG: company is:', type(company), company)
+        count_employee = web.ctx.orm.query(Employee).\
+            filter(Employee.company_id == Company.id). \
+            filter(Company.title == company). \
+            count()
+        print('DBG: count_employee', count_employee)
+
 
 
         return render.company_details(details)
