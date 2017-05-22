@@ -1,0 +1,5 @@
+$def with (employees)
+<ul>
+$for employee in employees:
+    <li id="t$employee.id">$employee.id . <a href="employee/$employee.id">$employee.name</a></li>
+</ul>

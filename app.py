@@ -3,6 +3,10 @@ import random
 import web
 
 from sqlalchemy.orm import scoped_session, sessionmaker
+
+# from sqlalchemy import create_engine, Column, Integer, ForeignKey, Numeric, DateTime, func
+from sqlalchemy import func
+
 from model import *
 
 render = web.template.render('templates/')
@@ -10,7 +14,9 @@ render = web.template.render('templates/')
 urls = (
     '/', 'index',
     '/company/(.*)', 'company_details',
-    '/view', 'view'
+    '/employees', 'employees',
+    '/employee/(.*)', 'employee_details',
+
 )
 
 def load_sqla(handler):
@@ -58,32 +64,73 @@ class index:
         return render.index(companies)
 
 
-class view:
-    def GET(self):
-        web.header('Content-type', 'text/plain')
-        return "\n".join(map(str, web.ctx.orm.query(Employee).all()))
-
 class company_details:
-    def GET(self, company):
+    def GET(self, company_id):
         '''
-        Show company details
+        Show company details by id
         :return: 
         '''
-        # details = web.ctx.orm.query(Company).all()
-        details = company
+        company = web.ctx.orm.query(Company).filter(Company.id == company_id).first()
+        # company_id = str(company, 'utf-8')
 
         # extend company details
         # todo - accept non-ASCII codepage
         print('DBG: company is:', type(company), company)
         count_employee = web.ctx.orm.query(Employee).\
             filter(Employee.company_id == Company.id). \
-            filter(Company.title == company). \
+            filter(Company.id == company_id). \
             count()
-        print('DBG: count_employee', count_employee)
+        # print('DBG: count_employee', count_employee)  #  ok
+
+        # extend company details for total salary
+        total_slr = web.ctx.orm.query(Employee.salary).\
+            filter(Employee.company_id == Company.id). \
+            filter(Company.id == company_id). \
+            all()
+        try:
+            # total_salary = web.ctx.orm.query(
+            #     func.sum(
+            #     Employee.salary)). all()
+
+            total_salary = web.ctx.orm.query(
+                func.sum(Employee.salary)).filter(Employee.company_id == company_id).all()
+
+            # total_salary = total_salary.with_entities(func.sum(Employee.salary)).scalar()
+
+            print('DBG 99 : total_salary', total_salary)
+        except Error as e:
+            print('ERR : could not count total_salary', type(e), e)
 
 
 
-        return render.company_details(details)
+        # total_slr
+
+        print('DBG 108: total_salary', type(total_salary), type(total_salary[0]), total_salary)
+
+        return render.company_details(company, count_employee, total_salary)
+
+
+class employees:
+    def GET(self):
+        # web.header('Content-type', 'text/plain')
+        employees = web.ctx.orm.query(Employee).all()
+        print('DBG employees:', len(employees), type(employees))
+
+        # return "\n".join(map(str, web.ctx.orm.query(Employee).all()))
+        return render.employees(employees)
+
+
+class employee_details:
+    def GET(self, id):
+        '''
+        Show employee details by id
+        :return: 
+        '''
+
+        employee_id = id
+        employee = web.ctx.orm.query(Employee).filter(Employee.id == employee_id).first()
+        print('DBG: employee is:', type(employee), employee)
+        return render.employee_details(employee)
 
 
 if __name__ == "__main__":
