@@ -1,5 +1,11 @@
-import string
-import random
+# import string
+
+# import random
+
+# import decimal
+
+import re
+
 import web
 
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -88,10 +94,6 @@ class company_details:
             filter(Company.id == company_id). \
             all()
         try:
-            # total_salary = web.ctx.orm.query(
-            #     func.sum(
-            #     Employee.salary)). all()
-
             total_salary = web.ctx.orm.query(
                 func.sum(Employee.salary)).filter(Employee.company_id == company_id).all()
 
@@ -101,12 +103,9 @@ class company_details:
         except Error as e:
             print('ERR : could not count total_salary', type(e), e)
 
-
-
-        # total_slr
-
-        print('DBG 108: total_salary', type(total_salary), type(total_salary[0]), total_salary)
-
+        print('DBG 108: total_salary', type(total_salary), type(total_salary[0]),
+              str(total_salary[0]), str(re.findall(r'\d+', str(total_salary[0]))))
+        total_salary = float(re.findall(r'\d+', str(total_salary[0]))[0])
         return render.company_details(company, count_employee, total_salary)
 
 
@@ -122,10 +121,10 @@ class employees:
 
 class employee_details:
     def GET(self, id):
-        '''
+        """
         Show employee details by id
         :return: 
-        '''
+        """
 
         employee_id = id
         employee = web.ctx.orm.query(Employee).filter(Employee.id == employee_id).first()
