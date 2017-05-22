@@ -71,6 +71,10 @@ class company_details:
         '''
         # details = web.ctx.orm.query(Company).all()
         details = company
+
+        # extend company details
+
+
         return render.company_details(details)
 
 
