@@ -22,6 +22,8 @@ urls = (
     '/company/(.*)', 'company_details',
     '/employees', 'employees',
     '/employee/(.*)', 'employee_details',
+    # '/employeeadd', 'employee_add',
+    '/employeeedit/(.*)', 'employee_details_edit',
 
 )
 
@@ -136,8 +138,72 @@ class employee_details:
         employee_id = id
         employee = web.ctx.orm.query(Employee).filter(Employee.id == employee_id).first()
         print('DBG: employee is:', type(employee), employee)
-        return render.employee_details(employee)
 
+        # edit section
+        edit_details = False
+
+        return render.employee_details(employee, edit_details)
+
+    def POST(self):
+        """
+
+        :return: 
+        """
+        # actually without AJAX
+
+        #
+        # pass
+        new_employee = web.input()
+        print('DBG web.input:', new_employee)  # DBG web.input: <Storage {'title': 'qwe'}>
+        raise web.seeother('/employees')
+
+    # def ADD(self):
+    #     """
+    #
+    #     :return:
+    #     """
+    #     # actually without AJAX
+    #
+    #     #
+    #     # pass
+    #     new_employee = web.input()
+    #     print('DBG web.input:', new_employee)  # DBG web.input: <Storage {'title': 'qwe'}>
+    #     raise web.seeother('/employees')
+
+
+# class employee_add:
+#     def POST(self):
+#         """
+#
+#         :return:
+#         """
+#         # actually without AJAX
+#
+#         #
+#         # pass
+#         new_employee = web.input()
+#         print('DBG web.input:', new_employee)  #  DBG web.input: <Storage {'title': 'qwe'}>
+#         raise web.seeother('/employees')
+
+
+class employee_details_edit:
+    def GET(self, id):
+        """
+        Edit employee details
+        
+        :return: 
+        """
+
+        # EMPTY for now
+
+        employee_id = id
+        employee = web.ctx.orm.query(Employee).filter(Employee.id == employee_id).first()
+        print('DBG: employee is:', type(employee), employee)
+
+        # edit section
+        edit_details = True
+
+        return render.employee_details(employee, edit_details)
 
 if __name__ == "__main__":
     app.run()

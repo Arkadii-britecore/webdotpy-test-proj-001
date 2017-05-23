@@ -5,5 +5,15 @@ $for employee in employees:
     <li id="t$employee.id">$employee.id . <a href="employee/$employee.id">$employee.name</a></li>
 </ul>
 </p>
-<a href="/">All companies </a> | <a href="/employees">Employees list</a>
+<a href="/">All companies </a> |
+<a href="/employees">Employees list</a> |
+<a href="/employees">Add employee ... later</a>
+
+'/employeeadd', 'employee_add',
+
+<form method="post" action="employees">
+<p><input type="text" name="title" /> <input type="submit" value="Add" /></p>
+</form>
+
+
 </body></html>

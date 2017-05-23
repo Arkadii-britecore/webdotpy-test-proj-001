@@ -1,4 +1,4 @@
-$def with (details)
+$def with (details, edit_details)
 <html>
 <body>
 <h2>
@@ -7,5 +7,11 @@ Here are the details about <em>$details.name</em>
 <br>
 Salary is <em>$details.salary</em>
 </p>
+
+$if edit_details:
+    edit_details = $edit_details , True
+
+
+<br>
 <a href="/">All companies </a> | <a href="/employees">Employees list</a>
 </body></html>
