@@ -99,14 +99,21 @@ class company_details:
 
             # total_salary = total_salary.with_entities(func.sum(Employee.salary)).scalar()
 
-            print('DBG 99 : total_salary', total_salary)
+            print('DBG 102 : total_salary', total_salary)
         except Error as e:
             print('ERR : could not count total_salary', type(e), e)
 
-        print('DBG 108: total_salary', type(total_salary), type(total_salary[0]),
+        print('DBG 106: total_salary', type(total_salary), type(total_salary[0]),
               str(total_salary[0]), str(re.findall(r'\d+', str(total_salary[0]))))
         total_salary = float(re.findall(r'\d+', str(total_salary[0]))[0])
-        return render.company_details(company, count_employee, total_salary)
+
+        # extend company info with list of workers
+        staff = web.ctx.orm.query(Employee).\
+            filter(Employee.company_id == Company.id). \
+            filter(Company.id == company_id).all()
+        print('DBG: staff:', type(staff), len(staff), staff)
+
+        return render.company_details(company, count_employee, total_salary, staff)
 
 
 class employees:

@@ -1,7 +1,19 @@
-$def with (company, count_employee, total_salary)
+$def with (company, count_employee, total_salary, staff)
 
 <html><body>
+<h2>
 Here are the details about <em>$company.title</em>
+</h2>
 <br>Total employees $count_employee
 <br>Total salary fund <em>$total_salary</em>
+<p>
+<table>
+    <tr><td><b>Employee</b></td><td><b>Salary</b></td></tr>
+    $for employee in staff
+    <tr>
+        <td>$employee.name</td><td>$employee.salary</td>
+    </tr>
+</table>
+</p>
+<a href="/">All companies </a> | <a href="/employees">Employees list</a>
 </body></html>

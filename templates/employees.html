@@ -1,5 +1,9 @@
 $def with (employees)
+<html><body>
 <ul>
 $for employee in employees:
     <li id="t$employee.id">$employee.id . <a href="employee/$employee.id">$employee.name</a></li>
 </ul>
+</p>
+<a href="/">All companies </a> | <a href="/employees">Employees list</a>
+</body></html>
